@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+# 02110-1301, USA.
+
+set -e
+
+. common.sh
+
+#NOTE: To import a windows system we need a disk exactly of the same size of the 
+#      original disk. The rebuild script into the backup directory can help you.
+
+if [ ! -b $blockdev ]; then
+        echo "ERROR: ${blockdev} is not a Block Device."
+        cleanup
+        exit 1
+fi
+
+gzip -d -c | dd of=${blockdev} bs=512
+
+EXIT_STATUS="$?"
+
+# execute cleanups
+cleanup
+trap - EXIT
+
+exit ${EXIT_STATUS}

@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+# 02110-1301, USA.
+
+# Load the configurations for this os definition
+if [ -f environment.sh ]; then
+	. environment.sh
+else
+	exit 1
+fi
+
+cloud_image="${cloud_images}/${OS_VARIANT}.img.raw"
+
+if ! [ -f "$cloud_image" ];then
+    echo "Cloud image $cloud_image doesn't exist" 1>&2
+    exit 1
+fi
+
+if [ "${DISK_1_PATH}" = "" ];then
+    echo "No second disk for cloud init data" 1>&2
+    exit 1
+fi
+
+short_instance_name=$(echo $INSTANCE_NAME | cut -d '.' -f 1)
+
+cloud_init_file="/tmp/cloud_init_$INSTANCE_NAME"
+
+cat > $cloud_init_file <<EOF
+#cloud-config
+hostname: $short_instance_name
+fqdn: $INSTANCE_NAME
+user: root
+disable_root: 0
+lock-passwd: True
+ssh_authorized_keys:
+$root_ssh_authorized_keys
+chpasswd: { expire: False }
+ssh_pwauth: False
+EOF
+
+/usr/bin/cloud-localds $cloud_init_file.img $cloud_init_file && \
+dd if="$cloud_init_file.img" of="$DISK_1_PATH" && \
+dd if="$cloud_image" of="$DISK_0_PATH"

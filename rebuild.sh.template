@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+# 02110-1301, USA.
+
+# Rebuild script for the VM: "%INSTANCE_NAME%".
+set -e
+
+# Instance parameters
+INSTANCE_NAME=%INSTANCE_NAME%
+PRIMARY_NODE=%INSTANCE_PRIMARY_NODE%
+SECONDARY_NODES=%INSTANCE_SECONDARY_NODES%
+
+# Timeout in seconds
+TIMEOUT=5
+
+### MAIN PROGRAM ###
+
+# Print on the screen a user warning
+echo "To rebuild ${INSTANCE_NAME} use the following command on the master node:"
+echo "-----------------------------------------------------------------------"
+echo \"gnt-backup import -t drbd \
+   -n ${PRIMARY_NODE}:${SECONDARY_NODES} \
+   --no-name-check --no-ip-check \
+   ${INSTANCE_NAME}\"
+echo "-----------------------------------------------------------------------"
+echo ""
+echo "NOTE: This script will execute automatically the the command and then"
+echo "      it will start the instance in ${TIMEOUT} seconds.."
+echo "      [Hit CTRL+C to stop the count down.]"
+
+# Run the timeout timer..
+Counter=${TIMEOUT}
+while [ ${Counter} -gt 0 ]; do
+	echo -n "${Counter}.. "
+	Counter=$((${Counter} -1))
+	sleep 1
+done
+echo "${Counter}.. Ok, let's start.."
+
+# Execute the restore command
+gnt-backup import -t drbd \
+   -n ${PRIMARY_NODE}:${SECONDARY_NODES} \
+   --no-name-check --no-ip-check \
+   ${INSTANCE_NAME}
+
+# Start-up the instance
+gnt-instance startup ${INSTANCE_NAME}
+
+echo "Done."
