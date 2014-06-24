@@ -38,18 +38,8 @@ short_instance_name=$(echo $INSTANCE_NAME | cut -d '.' -f 1)
 
 cloud_init_file="/tmp/cloud_init_$INSTANCE_NAME"
 
-cat > $cloud_init_file <<EOF
-#cloud-config
-hostname: $short_instance_name
-fqdn: $INSTANCE_NAME
-user: root
-disable_root: 0
-lock-passwd: True
-ssh_authorized_keys:
-$root_ssh_authorized_keys
-chpasswd: { expire: False }
-ssh_pwauth: False
-EOF
+echo "#cloud-config" > $cloud_init_file
+./cloud_data.rb >> $cloud_init_file
 
 /usr/bin/cloud-localds $cloud_init_file.img $cloud_init_file && \
 dd if="$cloud_init_file.img" of="$DISK_1_PATH" && \

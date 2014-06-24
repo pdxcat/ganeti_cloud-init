@@ -17,6 +17,8 @@
 
 set -e
 
+env > "/tmp/IMPORT_DERPYNESS_$(date +%s)"
+
 . common.sh
 
 #NOTE: To import a windows system we need a disk exactly of the same size of the 
@@ -28,7 +30,8 @@ if [ ! -b $blockdev ]; then
         exit 1
 fi
 
-gzip -d -c | dd of=${blockdev} bs=512
+
+pigz -p 4 -d -c | dd of=${blockdev} bs=512
 
 EXIT_STATUS="$?"
 

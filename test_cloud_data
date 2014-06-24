@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export INSTANCE_NAME="derp.cat.pdx.edu"
+export OS_VARIANT="ubuntu-trusty"
+./cloud_data.rb

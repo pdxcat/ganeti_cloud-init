@@ -188,27 +188,3 @@ else
   log_error "Unknown OS API VERSION $OS_API_VERSION"
   exit 1
 fi
-
-if [ -n "$OS_VARIANT" ]; then
-  if [ ! -d "$VARIANTS_DIR" ]; then
-    log_error "OS Variants directory $VARIANTS_DIR doesn't exist"
-    exit 1
-  fi
-  VARIANT_CONFIG="$VARIANTS_DIR/$OS_VARIANT.conf"
-  if [ -f "$VARIANT_CONFIG" ]; then
-    . "$VARIANT_CONFIG"
-  else
-    if grep -qxF "$OS_VARIANT" variants.list; then
-      log_error "ERROR: instance-debootstrap configuration error"
-      log_error "  Published variant $OS_VARIANT is missing its config file"
-      log_error "  Please create $VARIANT_CONFIG or unpublish the variant"
-      log_error "  (by removing $OS_VARIANT from variants.list)"
-    else
-      log_error "Unofficial variant $OS_VARIANT is unsupported"
-      log_error "Most probably this is a user error, forcing a wrong name"
-      log_error "To support this variant please create file $VARIANT_CONFIG"
-    fi
-    exit 1
-  fi
-fi
-

@@ -17,7 +17,11 @@
 
 set -e
 
+env > "/tmp/EXPORT_DERPYNESS_$(date +%s)"
+
 . common.sh
+
+
 
 # Executing a full raw backup of the device using dd making a file-disk-image.
 if [ ! -b $blockdev ]; then
@@ -40,7 +44,7 @@ REBUILD_TEMPLATE=rebuild.sh.template
 EXPORT_PATH=${EXPORT_DIR}/${INSTANCE_NAME}.new
 
 #Perform the export
-dd if=${blockdev} bs=512 | gzip 
+dd if=${blockdev} bs=512 | pigz -p 4
 EXIT_STATUS="$?"
 
 # Create temporary directory
