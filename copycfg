@@ -1,0 +1,21 @@
+#!/bin/bash
+# copy the ssh and puppet configs back in from copyconfig
+mkdir /tmp/configs
+mount -t nfs -o nolock caerbannog.cat.pdx.edu:/volumes/cave/misc/copycfg/hosts/$(hostname -f) /tmp/configs
+if [ "$?" -ne "0" ]; then
+    rmdir /tmp/configs
+    exit
+fi
+
+echo wat
+configs="/etc/ssh /var/puppet /var/lib/puppet /etc/puppet"
+for dir in `echo $configs` ; do
+    if [ -d /tmp/configs$dir ] ; then
+        mkdir -p `dirname $dir`
+        rsync -aq /tmp/configs$dir `dirname $dir`
+    fi
+done
+mv /etc/puppet/ssl /var/lib/puppet
+mv /var/puppet/ssl /var/lib/puppet
+umount /tmp/configs
+rmdir /tmp/configs

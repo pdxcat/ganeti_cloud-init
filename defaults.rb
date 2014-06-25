@@ -19,10 +19,16 @@ U16lY2HCicQrinR7wLUdKNIlFpd+UdasfJAd3381WAhsNUbRI5yAYhELc/VvQ11Qhkt090UKaU= root
   "write_files" => [
                     { "encoding"    => "b64",
                       "owneer"      => "root:root",
-                      "path"        => "/puppet.conf",
+                      "path"        => "/tmp/puppet.conf",
                       "permissions" => "0644",
                       "content"     => Base64.encode64(File.open("./puppet.conf").read)
+                    },
+                    { "encoding"    => "b64",
+                      "owneer"      => "root:root",
+                      "path"        => "/tmp/copycfg",
+                      "permissions" => "0655",
+                      "content"     => Base64.encode64(File.open("./copycfg").read)
                     }
-]
+                   ]
 
 }
