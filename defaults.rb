@@ -15,19 +15,15 @@ U16lY2HCicQrinR7wLUdKNIlFpd+UdasfJAd3381WAhsNUbRI5yAYhELc/VvQ11Qhkt090UKaU= root
   "ssh_pwauth" => false,
   "bootcmd"    => [
                    "mkdir -p /disk/trump",
+                   "/tmp/post",
                   ],
+  "packages"   => $kickstart["packages"].strip.split(/\s+/),
   "write_files" => [
                     { "encoding"    => "b64",
                       "owneer"      => "root:root",
-                      "path"        => "/tmp/puppet.conf",
-                      "permissions" => "0644",
-                      "content"     => Base64.encode64(File.open("./puppet.conf").read)
-                    },
-                    { "encoding"    => "b64",
-                      "owneer"      => "root:root",
-                      "path"        => "/tmp/copycfg",
+                      "path"        => "/tmp/post",
                       "permissions" => "0655",
-                      "content"     => Base64.encode64(File.open("./copycfg").read)
+                      "content"     => Base64.encode64($kickstart["post"])
                     }
                    ]
 

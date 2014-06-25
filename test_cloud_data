@@ -2,4 +2,5 @@
 
 export INSTANCE_NAME="derp.cat.pdx.edu"
 export OS_VARIANT="ubuntu-trusty"
+export INSTANCE_OS="cloud-init+ubuntu-trusty"
 ./cloud_data.rb
