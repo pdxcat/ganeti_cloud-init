@@ -13,11 +13,11 @@ t4DsLwyQhXmqGfGSirgTO7/BPGAJlFxVDLL93kMkWs0YsrFudL+QMeCFC8lkINpbnT2BYhsv6D/kpNmn
 U16lY2HCicQrinR7wLUdKNIlFpd+UdasfJAd3381WAhsNUbRI5yAYhELc/VvQ11Qhkt090UKaU= root@nightshade.cat.pdx.edu"],
   "chpasswd"   => {"expire" => false},
   "ssh_pwauth" => false,
-  "bootcmd"    => [
-                   "mkdir -p /disk/trump",
-                   "/tmp/post",
+  "runcmd"    => [
+                   "mkdir -p /disk/trump || true",
+                   "/bin/bash /tmp/post || true",
                   ],
-  "packages"   => $kickstart["packages"].strip.split(/\s+/),
+  "package_upgrade" => true,
   "write_files" => [
                     { "encoding"    => "b64",
                       "owneer"      => "root:root",

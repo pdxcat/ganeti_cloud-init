@@ -1,3 +1,5 @@
-$config["bootcmd"].unshift "apt-get update"
-$config["bootcmd"].unshift "dpkg -i /tmp/plabs.deb"
-$config["bootcmd"].unshift "wget https://apt.puppetlabs.com/puppetlabs-release-trusty.deb -O /tmp/plabs.deb"
+$config["runcmd"].unshift "apt-get -y install nfs-common #{$kickstart["packages"].strip.gsub("\n"," ")} || true"
+$config["runcmd"].unshift "apt-get -y dist-upgrade || true"
+$config["runcmd"].unshift "apt-get update || true"
+# $config["runcmd"].unshift "dpkg -i /tmp/plabs.deb"
+# $config["runcmd"].unshift "wget https://apt.puppetlabs.com/puppetlabs-release-trusty.deb -O /tmp/plabs.deb"
