@@ -2,6 +2,7 @@
 $config = {
   "hostname" => ENV['INSTANCE_NAME'].sub(/\..*$/,''),
   "fqdn"     => ENV['INSTANCE_NAME'],
+  "instance-id" => ENV['INSTANCE_NAME'],
   "user"     => "root",
   "disable_root" => 0,
   "lock-passwd"  => true,
@@ -14,9 +15,9 @@ U16lY2HCicQrinR7wLUdKNIlFpd+UdasfJAd3381WAhsNUbRI5yAYhELc/VvQ11Qhkt090UKaU= root
   "chpasswd"   => {"expire" => false},
   "ssh_pwauth" => false,
   "runcmd"    => [
-                   "mkdir -p /disk/trump || true",
-                   "/bin/bash /tmp/post || true",
-                  ],
+                  "mkdir -p /disk/trump || true",
+                  "/bin/bash /tmp/post || true",
+                 ],
   "package_upgrade" => true,
   "write_files" => [
                     { "encoding"    => "b64",
@@ -25,6 +26,8 @@ U16lY2HCicQrinR7wLUdKNIlFpd+UdasfJAd3381WAhsNUbRI5yAYhELc/VvQ11Qhkt090UKaU= root
                       "permissions" => "0655",
                       "content"     => Base64.encode64($kickstart["post"])
                     }
-                   ]
-
+                   ],
+  "phone_home" => {
+    "url" => 'http://web.cecs.pdx.edu/~sage/notify2.cgi?message=The%20vm%20$INSTANCE_ID%20is%20ready'
+  }
 }

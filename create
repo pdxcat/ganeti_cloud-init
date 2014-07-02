@@ -22,6 +22,8 @@ else
 	exit 1
 fi
 
+curl "http://web.cecs.pdx.edu/~sage/notify2.cgi?message=The%20vm%20${INSTANCE_NAME}%20is%20being%20pre-populated" &> /dev/null
+
 cloud_image="${cloud_images}/${OS_VARIANT}.img.raw"
 
 if ! [ -f "$cloud_image" ];then
@@ -37,10 +39,14 @@ fi
 short_instance_name=$(echo $INSTANCE_NAME | cut -d '.' -f 1)
 
 cloud_init_file="/tmp/cloud_init_$INSTANCE_NAME"
+cloud_meta_file="/tmp/cloud_meta_$INSTANCE_NAME"
 
 echo "#cloud-config" > $cloud_init_file
 ./cloud_data.rb >> $cloud_init_file
+./meta_data.rb > $cloud_meta_file
 
-/usr/bin/cloud-localds $cloud_init_file.img $cloud_init_file && \
+/usr/bin/cloud-localds $cloud_init_file.img $cloud_init_file $cloud_meta_file && \
 dd if="$cloud_init_file.img" of="$DISK_1_PATH" && \
 dd if="$cloud_image" of="$DISK_0_PATH"
+
+curl "http://web.cecs.pdx.edu/~sage/notify2.cgi?message=The%20vm%20${INSTANCE_NAME}%20is%20booting" &> /dev/null
