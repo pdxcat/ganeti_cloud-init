@@ -30,5 +30,5 @@ U16lY2HCicQrinR7wLUdKNIlFpd+UdasfJAd3381WAhsNUbRI5yAYhELc/VvQ11Qhkt090UKaU= root
   "phone_home" => {
     "url" => 'http://web.cecs.pdx.edu/~sage/notify2.cgi?message=The%20vm%20$INSTANCE_ID%20is%20ready'
   },
-  "timezone": "US/Pacific"
+  "timezone" => "US/Pacific"
 }
