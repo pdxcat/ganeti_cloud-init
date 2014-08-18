@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export INSTANCE_NAME="derp.cat.pdx.edu"
-export OS_VARIANT="ubuntu-trusty"
-export INSTANCE_OS="cloud-init+ubuntu-trusty"
+export OS_VARIANT="centos-6.5"
+#export OS_VARIANT="ubuntu-trusty"
+export INSTANCE_OS="cloud-init+$OS_VARIANT"
 ./cloud_data.rb
